@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aarya Atluri</title>
+<meta name="description" content="Aarya Atluri — thinker, problem solver, athlete. Personal portfolio.">
+<style>
+  :root { --ink:#111; --paper:#fafafa; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { font-family:"Helvetica Neue",Helvetica,Arial,sans-serif; color:var(--ink); background:var(--paper); line-height:1.55; }
+  #dots { position:fixed; inset:0; z-index:0; display:block; }
+  main { position:relative; z-index:1; }
+  section { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:14vh 8vw; max-width:880px; }
+  h1 { font-size:clamp(2.4rem,7vw,4.6rem); font-weight:700; letter-spacing:-0.02em; }
+  h2 { font-weight:700; text-transform:uppercase; letter-spacing:0.12em; font-size:clamp(0.9rem,2vw,1.1rem); margin-bottom:1.1rem; }
+  p { max-width:56ch; margin-bottom:1rem; }
+  .lead { font-size:1.15rem; }
+  ul { list-style:none; }
+  li { padding:0.45rem 0; border-bottom:1px dotted #999; max-width:56ch; }
+  li:last-child { border-bottom:none; }
+  .name { font-weight:700; }
+  .muted { color:#666; font-size:0.92rem; }
+  a { color:var(--ink); text-decoration:underline; text-decoration-style:dotted; }
+  nav { position:fixed; top:0; left:0; right:0; z-index:2; display:flex; gap:1.4rem; padding:1rem 8vw;
+        font-size:0.85rem; text-transform:uppercase; letter-spacing:0.12em; background:rgba(250,250,250,0.85); }
+  nav a { text-decoration:none; }
+  footer { position:relative; z-index:1; padding:2rem 8vw; font-size:0.8rem; color:#888; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+<canvas id="dots" aria-hidden="true"></canvas>
+<nav>
+  <a href="#about">About</a>
+  <a href="#work">Work</a>
+  <a href="#portfolio">Portfolio</a>
+  <a href="#contact">Contact</a>
+</nav>
+<main>
+  <section id="about">
+    <h1>Aarya Atluri</h1>
+    <p class="lead">Thinker &mdash; problem solver &mdash; athlete.</p>
+    <p>Software engineer in San Francisco. I build recommendation systems, ML infrastructure, and small experimental products. Off the clock: rock climbing, swimming, and generally moving around.</p>
+    <p class="muted">(A short bio in your own words goes here.)</p>
+  </section>
+
+  <section id="work">
+    <h2>Work</h2>
+    <ul>
+      <li><span class="name">YouTube</span> &mdash; Product/ML Software Engineer, Recommendations &middot; 2024&ndash;present</li>
+      <li><span class="name">Redacted AI Lab</span> &mdash; Founder &middot; 2025&ndash;present</li>
+      <li><span class="name">IMC Trading</span> &mdash; Software Engineer Intern &middot; 2024</li>
+      <li><span class="name">Google</span> &mdash; Software Engineer Intern, Argos &middot; 2023</li>
+      <li><span class="name">Snap Inc.</span> &mdash; ML Engineer Intern, Ads Ranking &middot; 2023</li>
+      <li><span class="name">NVIDIA</span> &mdash; Software Engineer Intern, Automotive OS &middot; 2022</li>
+      <li><span class="name">AMD</span> &mdash; Embedded Software Engineer Intern &middot; 2021</li>
+      <li><span class="name">Sock Club</span> &mdash; Software Engineer Intern &middot; 2021</li>
+      <li><span class="name">NASA</span> &mdash; Software Engineer Intern &middot; 2020</li>
+    </ul>
+    <p class="muted">B.Sc. Electrical &amp; Computer Engineering, UT Austin, 2020&ndash;2024.</p>
+  </section>
+
+  <section id="portfolio">
+    <h2>Portfolio</h2>
+    <ul>
+      <li><span class="name">Slurrl</span> &mdash; <a href="https://slurrl.com">slurrl.com</a><br>
+        <span class="muted">(One-line description of Slurrl goes here.)</span></li>
+      <li><span class="name">GoonSahur</span> &mdash; iOS app, SOS companion &middot; TestFlight beta<br>
+        <span class="muted">(One-line description of GoonSahur goes here.)</span></li>
+      <li><span class="name">Athletics</span> &mdash; rock climbing, swimming, Eagle Scout<br>
+        <span class="muted">(A few lines about climbing and other athletics go here.)</span></li>
+    </ul>
+    <p class="muted">More projects to come.</p>
+  </section>
+
+  <section id="contact">
+    <h2>Contact</h2>
+    <p class="lead">Say hi.</p>
+    <ul>
+      <li>Email &mdash; <a href="mailto:aaryaatluri@utexas.edu">aaryaatluri@utexas.edu</a></li>
+      <li>LinkedIn &mdash; <a href="https://www.linkedin.com/in/jackdestmanalive">/jackdestmanalive</a></li>
+    </ul>
+  </section>
+</main>
+<footer>&copy; Aarya Atluri</footer>
+
+<script>
+(function () {
+  var canvas = document.getElementById('dots');
+  var ctx = canvas.getContext('2d');
+  var W, H, dots = [];
+  var GRID = 26;
+  var N = 0;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    build();
+  }
+
+  function build() {
+    dots = [];
+    var cols = Math.ceil(W / GRID) + 1, rows = Math.ceil(H / GRID) + 1;
+    for (var r = 0; r < rows; r++)
+      for (var c = 0; c < cols; c++)
+        dots.push({ x: c * GRID, y: r * GRID, a: 0.12 });
+    N = dots.length;
+  }
+
+  var SHAPES = [
+    function (x, y, w, h) { // scattered field (About)
+      return 0.08 + 0.12 * Math.abs(Math.sin(x * 0.01 + y * 0.013));
+    },
+    function (x, y, w, h) { // circuit grid (Work)
+      var gx = Math.abs(((x % 104) + 104) % 104 - 52);
+      var gy = Math.abs(((y % 104) + 104) % 104 - 52);
+      return (gx < 3 || gy < 3) ? 0.65 : 0.08;
+    },
+    function (x, y, w, h) { // mountain ridge (Portfolio)
+      var m = (x / w) * 6 - 3;
+      var ridge = h * 0.62 - Math.abs(Math.sin(m) * h * 0.22 - h * 0.08);
+      return y > ridge ? 0.55 : (y > ridge - 40 ? 0.30 : 0.06);
+    },
+    function (x, y, w, h) { // concentric rings (Contact)
+      var dx = x - w / 2, dy = y - h / 2;
+      var d = Math.sqrt(dx * dx + dy * dy);
+      return (Math.sin(d * 0.045) > 0.6) ? 0.62 : 0.07;
+    }
+  ];
+
+  function drift(shapeIdx, d, t) {
+    var ph = shapeIdx * 1.7 + (d.x * 0.01 + d.y * 0.008);
+    return { x: Math.sin(t * 0.0006 + ph) * 4, y: Math.cos(t * 0.0005 + ph * 1.3) * 4 };
+  }
+
+  var sections = [].slice.call(document.querySelectorAll('main section'));
+  function activeShape() {
+    var mid = window.scrollY + window.innerHeight / 2, best = 0, bd = 1e9;
+    sections.forEach(function (s, i) {
+      var d = Math.abs(s.offsetTop + s.offsetHeight / 2 - mid);
+      if (d < bd) { bd = d; best = i; }
+    });
+    return best;
+  }
+
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function frame(t) {
+    var shape = activeShape();
+    var fn = SHAPES[Math.min(shape, SHAPES.length - 1)];
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < N; i++) {
+      var d = dots[i];
+      var ta = fn(d.x, d.y, W, H);
+      d.a += (ta - d.a) * 0.06;
+      var dr = reduce ? { x: 0, y: 0 } : drift(shape, d, t);
+      ctx.fillStyle = 'rgba(17,17,17,' + d.a.toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(d.x + dr.x, d.y + dr.y, 2.1, 0, 6.2832);
+      ctx.fill();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  window.addEventListener('resize', resize);
+  resize();
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
